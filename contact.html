@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Team Members</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('images/bg.jpg') no-repeat center center fixed; /* Background image */
+            background-size: cover; /* Cover the entire screen */
+            color: #fff; /* Default white text */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Add spacing between profiles */
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.225); /* Light transparent black box */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); /* Subtle white shadow */
+        }
+        .profile-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            font-weight: bold;
+            color: #fff; /* White text for logo */
+            margin-right: 20px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2); /* Shadow for logo */
+        }
+        .profile-logo.bharathwaj {
+            background-color: #66cc66; /* Darkened Light Green for Bharathwaj */
+        }
+        .profile-logo.bhuvaneshwaran {
+            background-color: #4682b4; /* Darkened Light Blue for Bhuvaneshwaran */
+        }
+        .profile-logo.kaveesh {
+            background-color: #ff8c00; /* Darkened Orange for Kaveesh */
+        }
+        .profile-details {
+            text-align: left;
+            font-size: 1.2em; /* Increased font size for details (20% larger) */
+        }
+        .profile-details h3 {
+            margin: 0;
+            color: #ff4500; /* Darker orange for names */
+        }
+        .profile-details p {
+            margin: 5px 0;
+            color: #333; /* Dark gray for details */
+        }
+        .profile-details span {
+            font-weight: bold;
+            color: #111; /* Nearly black for labels */
+        }
+        .profile-details .email {
+            color: #0055aa; /* Dark blue for email visibility */
+            font-weight: normal;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Bharathwaj's Profile -->
+        <div class="profile">
+            <div class="profile-logo bharathwaj">B</div> <!-- Darkened Light Green Logo -->
+            <div class="profile-details">
+                <h3>Bharathwaj S</h3>
+                <p><span>Email:</span> <a href="mailto:bharathwaj@gmail.com" class="email">bharathwaj@gmail.com</a></p>
+                <p><span>Contact:</span> +91 93457 04348</p>
+                <p><span>Role:</span> Team Member</p>
+            </div>
+        </div>
+
+        <!-- Bhuvaneshwaran's Profile -->
+        <div class="profile">
+            <div class="profile-logo bhuvaneshwaran">B</div> <!-- Darkened Light Blue Logo -->
+            <div class="profile-details">
+                <h3>Bhuvaneshwaran S</h3>
+                <p><span>Email:</span> <a href="mailto:hyperfreaky@gmail.com" class="email">hyperfreaky@gmail.com</a></p>
+                <p><span>Contact:</span> +91 63812 79565</p>
+                <p><span>Role:</span> Team Member</p>
+            </div>
+        </div>
+
+        <!-- Kaveesh's Profile -->
+        <div class="profile">
+            <div class="profile-logo kaveesh">K</div> <!-- Darkened Orange Logo -->
+            <div class="profile-details">
+                <h3>Kaveesh K S</h3>
+                <p><span>Email:</span> <a href="mailto:kaveeshkaveesh56@gmail.com" class="email">kaveeshkaveesh56@gmail.com</a></p>
+                <p><span>Contact:</span> +91 93429 46467</p>
+                <p><span>Role:</span> Team Member</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
