@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unique Travel Budget Estimator</title>
+    <style>
+  body {
+  font-family: 'Arial', sans-serif;
+  margin: 20px;
+  background-color: #f4f4f4;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  }
+
+  .container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 700px;
+  }
+
+  h1 {
+  color: #007bff;
+  text-align: center;
+  margin-bottom: 20px;
+  }
+
+  .input-group {
+  margin-bottom: 20px;
+  }
+
+  label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+  }
+
+  input[type="number"], select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 16px;
+  }
+
+  button {
+  background-color: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+  background-color: #218838;
+  }
+
+  #recommendation-output {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #e9ecef;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  display: none; /* Initially hidden */
+  }
+
+  #recommendation-output h2 {
+  color: #007bff;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+  }
+
+  .recommendation-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-left: 5px solid #007bff;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  }
+
+  .recommendation-item h3 {
+  color: #343a40;
+  margin-top: 0;
+  margin-bottom: 5px;
+  }
+
+  .budget-detail {
+  font-style: italic;
+  color: #6c757d;
+  }
+
+  .unique-element {
+  background: linear-gradient(45deg, #a7f3d0, #6ee7b7);
+  color: #1e3a8a;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  .note {
+  font-size: 0.8em;
+  color: #777;
+  margin-top: 5px;
+  font-style: italic;
+  }
+  </style>
+ </head>
+ <body>
+  <div class="container">
+  <div class="unique-element">✨ Discover Your Dream Trip Within Budget! ✨</div>
+  <h1>Personalized Budget Travel Planner</h1>
+
+  <div class="input-group">
+  <label for="budget">Total Budget (INR):</label>
+  <input type="number" id="budget" name="budget" required min="1">
+  </div>
+
+  <div class="input-group">
+  <label for="persons">Number of Persons:</label>
+  <select id="persons" name="persons">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+  </select>
+  </div>
+
+  <div class="input-group">
+  <label for="season">Preferred Season:</label>
+  <select id="season" name="season">
+  <option value="Any">Any</option>
+  <option value="Summer">Summer (Apr-Jun)</option>
+  <option value="Monsoon">Monsoon (Jul-Sep)</option>
+  <option value="Winter">Winter (Oct-Mar)</option>
+  </select>
+  </div>
+
+  <button onclick="estimateBudget()">Get Recommendations</button>
+
+  <div id="recommendation-output">
+  <h2>Your Personalized Trip Recommendation</h2>
+  <div id="place"></div>
+  <div id="hotel"></div>
+  <div id="food"></div>
+  <div id="travel"></div>
+  <div id="activities"></div>
+  <h3 style="text-align: center;">Total Estimated Budget: <span id="total-budget" style="font-weight: bold; color: #28a745;"></span> INR</h3>
+  </div>
+  </div>
+
+  <script>
+  const recommendationsData = {
+  "Summer": {
+  "budget_friendly": [
+  {
+  place: "Rishikesh",
+  hotel: { name: "Aloha on the Ganges", cost_per_night_per_person: 1500 },
+  food: { description: "North Indian Thali", cost_per_day_per_person: 800 },
+  travel: { description: "Train/Bus", cost_per_person: 1000 },
+  activities: [
+  { name: "River Rafting (Budget Option)", cost_per_person: 800 },
+  { name: "Yoga & Meditation", cost_per_person: 200 }
+  ],
+  budget_allocation: { place: 0.1, hotel: 0.3, food: 0.25, travel: 0.15, activities: 0.2 }
+  },
+  {
+  place: "Mount Abu",
+  hotel: { name: "Hotel Hilltone", cost_per_night_per_person: 1200 },
+  food: { description: "Gujarati & Rajasthani Meals", cost_per_day_per_person: 700 },
+  travel: { description: "Train/Bus", cost_per_person: 900 },
+  activities: [
+  { name: "Visit Dilwara Temples (Free)", cost_per_person: 0 },
+  { name: "Sunset Point", cost_per_person: 100 }
+  ],
+  budget_allocation: { place: 0.1, hotel: 0.35, food: 0.25, travel: 0.15, activities: 0.15 }
+  }
+  ],
+  "mid_range": [
+  {
+  place: "Ooty",
+  hotel: { name: "The Savoy", cost_per_night_per_person: 2500 },
+  food: { description: "South Indian & Continental", cost_per_day_per_person: 1200 },
+  travel: { description: "Car Rental (Shared)", cost_per_person: 1500 },
+  activities: [
+  { name: "Botanical Garden", cost_per_person: 100 },
+  { name: "Toy Train Ride", cost_per_person: 500 }
+  ],
+  budget_allocation: { place: 0.1, hotel: 0.4, food: 0.25, travel: 0.15, activities: 0.1 }
+  }
+  ]
+  },
+  "Monsoon": {
+  "budget_friendly": [
+  {
+  place: "Shillong",
+  hotel: { name: "Hotel Polo Towers", cost_per_night_per_person: 1800 },
+  food: { description: "Khasi Cuisine", cost_per_day_per_person: 900 },
+  travel: { description: "Bus/Shared Taxi", cost_per_person: 1200 },
+  activities: [
+  { name: "Visit Waterfalls (Seasonal)", cost_per_person: 150 },
+  { name: "Explore Local Markets", cost_per_person: 0 }
+  ],
+  budget_allocation: { place: 0.1, hotel: 0.3, food: 0.25, travel: 0.2, activities: 0.15 }
+  }
+  ],
+  "mid_range": [
+  {
+  place: "Wayanad",
+  hotel: { name: "Vythiri Village", cost_per_night_per_person: 2800 },
+  food: { description: "Kerala Cuisine", cost_per_day_per_person: 1300 },
+  travel: { description: "Car Rental (Shared)", cost_per_person: 1600 },
+  activities: [
+  { name: "Edakkal Cave Visit", cost_per_person: 300 },
+  { name: "Tea Plantation Walk", cost_per_person: 200 }
+  ],
+  budget_allocation: { place: 0.1, hotel: 0.4, food: 0.25, travel: 0.15, activities: 0.1 }
+  }
+  ]
+  },
+  "Winter": {
+  "budget_friendly": [
+  {
+  place: "Jaipur",
+  hotel: { name: "Hotel Diggi Palace", cost_per_night_per_person: 1600 },
+  food: { description: "Rajasthani Thali", cost_per_day_per_person: 850 },
+  travel: { description: "Train/Local Transport", cost_per_person: 1100 },
+  activities: [
+  { name: "Hawa Mahal (Entry Fee)", cost_per_person: 50 },
+  { name: "City Palace (Partial Visit)", cost_per_person: 200 }
+  ],
+  budget_allocation: { place: 0.1, hotel: 0.3, food: 0.25, travel: 0.2, activities: 0.15 }
+  },
+  {
+  place: "Ahmedabad",
+  hotel: { name: "The House of MG", cost_per_night_per_person: 1400 },
+  food: { description: "Gujarati Thali", cost_per_day_per_person: 750 },
+  travel: { description: "Local Bus/Auto", cost_per_person: 950 },
+  activities: [
+  { name: "Sabarmati Ashram (Free)", cost_per_person: 0 },
+  { name: "Kankaria Lake", cost_per_person: 25 }
+  ],
+  budget_allocation: { place: 0.1, hotel: 0.35, food: 0.25, travel: 0.15, activities: 0.15 }
+  }
+  ],
+  "mid_range": [
+  {
+  place: "Goa",
+  hotel: { name: "The Leela Goa (Budget Rooms)", cost_per_night_per_person: 2200 },
+  food: { description: "Seafood & Goan Cuisine", cost_per_day_per_person: 1100 },
+  travel: { description: "Scooter Rental (Shared)", cost_per_person: 1400 },
+  activities: [
+  { name: "Beach Visits (Free)", cost_per_person: 0 },
+  { name: "Water Sports (Budget Option)", cost_per_person: 700 }
+  ],
+  budget_allocation: { place: 0.15, hotel: 0.35, food: 0.25, travel: 0.15, activities: 0.1 }
+  }
+  ]
+  },
+  "Any": {
+  "budget_friendly": [
+  {
+  place: "Varanasi",
+  hotel: { name: "BrijRama Palace (Budget Rooms)", cost_per_night_per_person: 1300 },
+  food: { description: "Street Food & North Indian", cost_per_day_per_person: 700 },
+  travel: { description: "Local Transport", cost_per_person: 800 },
+  activities: [
+  { name: "Ganga Aarti (Free)", cost_per_person: 0 },
+  { name: "Boat Ride (Shared)", cost_per_person: 300 }
+  ],
+  budget_allocation: { place: 0.1, hotel: 0.3, food: 0.3, travel: 0.2, activities: 0.1 }
+  }
+  ],
+  "mid_range": [
+  {
+  place: "Udaipur",
+  hotel: { name: "The Oberoi Udaivilas (Slightly Lower Category)", cost_per_night_per_person: 2600 },
+  food: { description: "North Indian & Rajasthani", cost_per_day_per_person: 1200 },
+  travel: { description: "Auto/Taxi", cost_per_person: 1500 },
+  activities: [
+  { name: "Lake Pichola Boat Ride", cost_per_person: 400 },
+  { name: "City Palace Visit", cost_per_person: 300 }
+  ],
+  budget_allocation: { place: 0.1, hotel: 0.4, food: 0.25, travel: 0.15, activities: 0.1 }
+  }
+  ]
+  }
+  };
+
+  function estimateBudget() {
+  const totalBudget = parseInt(document.getElementById("budget").value);
+  const numPersons = parseInt(document.getElementById("persons").value);
+  const season = document.getElementById("season").value;
+  const outputDiv = document.getElementById("recommendation-output");
+  const placeDiv = document.getElementById("place");
+  const hotelDiv = document.getElementById("hotel");
+  const foodDiv = document.getElementById("food");
+  const travelDiv = document.getElementById("travel");
+  const activitiesDiv = document.getElementById("activities");
+  const totalBudgetSpan = document.getElementById("total-budget");
+
+  if (isNaN(totalBudget) || isNaN(numPersons) || totalBudget < 1 || numPersons < 1) {
+  alert("Please enter a valid budget and number of persons.");
+  return;
+  }
+
+  const budgetPerPerson = totalBudget / numPersons;
+  let recommendedTrip = null;
+  let budgetCategory = "budget_friendly"; // Default category
+
+  if (budgetPerPerson >= 3000) {
+  budgetCategory = "mid_range";
+  }
+
+  const seasonData = recommendationsData[season];
+  if (!seasonData) {
+  alert("No recommendations available for the selected season.");
+  return;
+  }
+
+  const possibleTrips = seasonData[budgetCategory];
+  if (!possibleTrips || possibleTrips.length === 0) {
+  const otherCategory = budgetCategory === "budget_friendly" ? "mid_range" : "budget_friendly";
+  const alternativeTrips = seasonData[otherCategory];
+  if (alternativeTrips && alternativeTrips.length > 0) {
+  recommendedTrip = alternativeTrips[Math.floor(Math.random() * alternativeTrips.length)];
+  alert(`No exact match for your budget. Showing a ${otherCategory.replace("_", " ")} option.`);
+  } else {
+  alert("No suitable recommendations found for your budget and season.");
+  outputDiv.style.display = "none";
+  return;
+  }
+  } else {
+  recommendedTrip = possibleTrips[Math.floor(Math.random() * possibleTrips.length)];
+  }
+
+  if (recommendedTrip) {
+  const numDays = 3; // Assuming a 3-day trip for estimation
+
+  const placeBudget = totalBudget * recommendedTrip.budget_allocation.place;
+  const hotelBudget = numDays * numPersons * recommendedTrip.hotel.cost_per_night_per_person;
+  const foodBudget = numDays * numPersons * recommendedTrip.food.cost_per_day_per_person;
+  const travelBudget = numPersons * recommendedTrip.travel.cost_per_person;
+  let activitiesBudget = 0;
+  let activitiesList = "";
+  recommendedTrip.activities.forEach(activity => {
+  activitiesBudget += numPersons * activity.cost_per_person;
+  activitiesList += `<li>${activity.name} (₹${numPersons * activity.cost_per_person})</li>`;
+  });
+
+  const estimatedTotalBudget = hotelBudget + foodBudget + travelBudget + activitiesBudget;
+
+
+  placeDiv.innerHTML = `<h3>Place: ${recommendedTrip.place}</h3>`;
+  hotelDiv.innerHTML = `<h3>Hotel: ${recommendedTrip.hotel.name}</h3><p class="budget-detail">Estimated: ₹${hotelBudget}</p>`;
+  foodDiv.innerHTML = `<h3>Food: ${recommendedTrip.food.description}</h3><p class="budget-detail">Estimated: ₹${foodBudget}</p>`;
+  travelDiv.innerHTML = `<h3>Travel: ${recommendedTrip.travel.description}</h3><p class="budget-detail">Estimated: ₹${travelBudget}</p>`;
+  activitiesDiv.innerHTML = `<h3>Activities:</h3><ul>${activitiesList}</ul><p class="budget-detail">Estimated: ₹${activitiesBudget}</p>`;
+  totalBudgetSpan.textContent = totalBudget; // Display the user's input budget
+  outputDiv.style.display = "block";
+  }
+  }
+  </script>
+ </body>
+ </html>

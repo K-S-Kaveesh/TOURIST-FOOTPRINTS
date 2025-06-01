@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+ <html>
+ <head>
+  <title>Personalized Travel Recommendations</title>
+  <style>
+  body {
+  font-family: sans-serif;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('images/recombg.jpg'); /* Assuming the image is in an 'images' folder */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #f0f8ff; /* Light, almost white text for contrast against blue */
+  }
+
+  .selections {
+  margin-bottom: 20px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.07); /* Increased transparency */
+  border: 1px solid rgba(255, 255, 255, 0.14); /* Increased transparency */
+  border-radius: 5px;
+  padding: 20px;
+  }
+
+  .category-button, .season-button {
+  padding: 10px 15px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.21); /* Increased transparency */
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.035); /* Increased transparency */
+  color: #f0f8ff;
+  }
+
+  .category-button.selected, .season-button.selected {
+  background-color: #a6d1ff; /* A lighter blue for selected state */
+  color: #1e3a8a; /* Darker blue text for selected state */
+  }
+
+  .recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjusted minmax for text */
+  gap: 20px;
+  width: 80%;
+  }
+
+  .recommendation-box {
+  border: 1px solid rgba(255, 255, 255, 0.14); /* Increased transparency */
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.105); /* Increased transparency */
+  align-items: flex-start; /* Align content to the start (top) */
+  padding: 15px; /* Add some padding inside the box */
+  }
+
+  .recommendation-details {
+  flex-grow: 1;
+  color: #e0f2f7; /* Another light text color */
+  text-align: left;
+  }
+
+  .recommendation-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #ffffff; /* White for emphasis */
+  }
+
+  .recommendation-hotel {
+  font-style: italic;
+  color: #bbdefb; /* A slightly darker light blue */
+  margin-bottom: 5px;
+  }
+
+  .recommendation-food {
+  margin-bottom: 5px;
+  color: #e1f5fe; /* Another light blue */
+  }
+
+  .recommendation-budget {
+  font-weight: bold;
+  color: #81d4fa; /* A brighter light blue */
+  }
+
+  .hidden {
+  display: none;
+  }
+  </style>
+ </head>
+ <body>
+
+ <div class="selections">
+  <div>
+  <h3>People Category</h3>
+  <button class="category-button" data-category="Friends">Friends</button>
+  <button class="category-button" data-category="Family">Family</button>
+  <button class="category-button" data-category="Couples">Couples</button>
+  </div>
+  <div>
+  <h3>Best Time to Visit</h3>
+  <button class="season-button" data-season="Jan-Mar">Jan-Mar</button>
+  <button class="season-button" data-season="Apr-Jun">Apr-Jun</button>
+  <button class="season-button" data-season="Jul-Sep">Jul-Sep</button>
+  <button class="season-button" data-season="Oct-Dec">Oct-Dec</button>
+  </div>
+ </div>
+
+ <div class="recommendation-grid" id="recommendations">
+  </div>
+
+ <script>
+ const categoryButtons = document.querySelectorAll('.category-button');
+ const seasonButtons = document.querySelectorAll('.season-button');
+ const recommendationsContainer = document.getElementById('recommendations');
+
+ let selectedCategories = new Set();
+ let selectedSeasons = new Set();
+
+ const allRecommendationsData = {
+  "Friends": [
+  { destination: "Goa", season: "Jan-Mar", hotel: "The Leela Goa", activity: "Beach Parties & Water Sports", budget: "₹15,000 - ₹25,000" },
+  { destination: "Kasol", season: "Apr-Jun", hotel: "The Himalayan Village", activity: "Trekking & Camping", budget: "₹8,000 - ₹15,000" },
+  { destination: "Rishikesh", season: "Jul-Sep", hotel: "Aloha on the Ganges", activity: "Yoga & River Rafting", budget: "₹7,000 - ₹12,000" },
+  { destination: "Pondicherry", season: "Oct-Dec", hotel: "Le Pondy", activity: "Exploring French Colony & Beaches", budget: "₹10,000 - ₹18,000" },
+  { destination: "Jaipur", season: "Jan-Mar", hotel: "Rambagh Palace", activity: "Historical Sightseeing & Festivals", budget: "₹12,000 - ₹20,000" },
+  { destination: "Manali", season: "Apr-Jun", hotel: "The Himalayan", activity: "Adventure Sports & Scenic Views", budget: "₹10,000 - ₹17,000" },
+  { destination: "Udaipur", season: "Jul-Sep", hotel: "The Oberoi Udaivilas", activity: "Lake Pichola Boat Ride & Palaces", budget: "₹25,000 - ₹40,000" },
+  { destination: "Coorg", season: "Oct-Dec", hotel: "The Tamara Coorg", activity: "Coffee Plantation Tours & Nature Walks", budget: "₹16,000 - ₹28,000" }
+  ],
+  "Family": [
+  { destination: "Kerala", season: "Jan-Mar", hotel: "The Zuri Kumarakom", activity: "Backwater Cruise & Wildlife Sanctuary", budget: "₹18,000 - ₹30,000" },
+  { destination: "Ooty", season: "Apr-Jun", hotel: "The Savoy", activity: "Botanical Garden & Toy Train Ride", budget: "₹9,000 - ₹16,000" },
+  { destination: "Darjeeling", season: "Jul-Sep", hotel: "The Glenburn Tea Estate", activity: "Tea Garden Visit & Mountain Views", budget: "₹11,000 - ₹19,000" },
+  { destination: "Andaman", season: "Oct-Dec", hotel: "Taj Exotica Havelock", activity: "Scuba Diving & Island Hopping", budget: "₹20,000 - ₹35,000" },
+  { destination: "Mount Abu", season: "Jan-Mar", hotel: "The Palace Hotel", activity: "Dilwara Temples & Sunset Points", budget: "₹8,500 - ₹14,500" },
+  { destination: "Munnar", season: "Apr-Jun", hotel: "Fragrant Nature Munnar", activity: "Tea Estate Trails & Spice Plantations", budget: "₹14,000 - ₹22,000" },
+  { destination: "Shimla", season: "Jul-Sep", hotel: "The Oberoi Cecil", activity: "Mall Road Exploration & Heritage Walks", budget: "₹13,000 - ₹21,000" },
+  { destination: "Alleppey", season: "Oct-Dec", hotel: "Houseboat Stay", activity: "Houseboat Experience & Village Life", budget: "₹10,000 - ₹18,000" }
+  ],
+  "Couples": [
+  { destination: "Udaipur", season: "Jan-Mar", hotel: "The Oberoi Udaivilas", activity: "Romantic Boat Ride & Palace Tours", budget: "₹25,000 - ₹40,000" },
+  { destination: "Coorg", season: "Apr-Jun", hotel: "The Tamara Coorg", activity: "Secluded Nature Retreat & Coffee Tasting", budget: "₹16,000 - ₹28,000" },
+  { destination: "Munnar", season: "Jul-Sep", hotel: "Fragrant Nature Munnar", activity: "Mist-Covered Hills & Tea Tasting", budget: "₹14,000 - ₹22,000" },
+  { destination: "Alleppey", season: "Oct-Dec", hotel: "Houseboat Stay", activity: "Private Backwater Cruise & Sunset Views", budget: "₹10,000 - ₹18,000" },
+  { destination: "Goa", season: "Jan-Mar", hotel: "The Leela Goa", activity: "Relaxing Beaches & Candlelight Dinners", budget: "₹18,000 - ₹30,000" },
+  { destination: "Shimla", season: "Apr-Jun", hotel: "The Oberoi Cecil", activity: "Scenic Walks & Romantic Evenings", budget: "₹15,000 - ₹25,000" },
+  { destination: "Pondicherry", season: "Jul-Sep", hotel: "Le Pondy", activity: "Quiet Beaches & French Cuisine", budget: "₹12,000 - ₹20,000" },
+  { destination: "Darjeeling", season: "Oct-Dec", hotel: "The Glenburn Tea Estate", activity: "Cozy Stays & Tea Estate Romance", budget: "₹13,000 - ₹21,000" }
+  ]
+ };
+
+ function updateRecommendations() {
+  recommendationsContainer.innerHTML = '';
+  let filteredRecommendations = [];
+
+  if (selectedCategories.size > 0) {
+    allRecommendationsDataArray = Object.entries(allRecommendationsData);
+    for (const [category, recommendations] of allRecommendationsDataArray) {
+      if (selectedCategories.has(category)) {
+        filteredRecommendations = filteredRecommendations.concat(recommendations.filter(rec => {
+          if (selectedSeasons.size > 0) {
+            return selectedSeasons.has(rec.season);
+          }
+          return true;
+        }));
+      }
+    }
+  } else if (selectedSeasons.size > 0) {
+    allRecommendationsDataArray = Object.entries(allRecommendationsData);
+    for (const [category, recommendations] of allRecommendationsDataArray) {
+      filteredRecommendations = filteredRecommendations.concat(recommendations.filter(rec => selectedSeasons.has(rec.season)));
+    }
+  } else {
+    recommendationsContainer.innerHTML = '<p>Please select a category or season to see recommendations.</p>';
+    return;
+  }
+
+  // Remove duplicate recommendations based on destination
+  const uniqueRecommendations = Array.from(new Set(filteredRecommendations.map(a => a.destination)))
+    .map(destination => {
+      return filteredRecommendations.find(a => a.destination === destination)
+    });
+
+  displayRecommendations(uniqueRecommendations.slice(0, 20));
+ }
+
+ function displayRecommendations(recommendations) {
+  recommendations.forEach(rec => {
+    const box = document.createElement('div');
+    box.classList.add('recommendation-box');
+
+    const details = document.createElement('div');
+    details.classList.add('recommendation-details');
+
+    const title = document.createElement('h4');
+    title.classList.add('recommendation-title');
+    title.textContent = rec.destination;
+
+    const activity = document.createElement('p');
+    activity.textContent = `Activity: ${rec.activity}`;
+
+    const hotel = document.createElement('p');
+    hotel.classList.add('recommendation-hotel');
+    hotel.textContent = `Hotel: ${rec.hotel}`;
+
+    const budget = document.createElement('p');
+    budget.classList.add('recommendation-budget');
+    budget.textContent = `Approx. Budget: ${rec.budget} INR`;
+
+    details.appendChild(title);
+    details.appendChild(activity);
+    details.appendChild(hotel);
+    details.appendChild(budget);
+
+    box.appendChild(details);
+    recommendationsContainer.appendChild(box);
+  });
+ }
+
+ categoryButtons.forEach(button => {
+  button.addEventListener('click', function() {
+    const category = this.dataset.category;
+    if (selectedCategories.has(category)) {
+      selectedCategories.delete(category);
+      this.classList.remove('selected');
+    } else {
+      selectedCategories.add(category);
+      this.classList.add('selected');
+    }
+    updateRecommendations();
+  });
+ });
+
+ seasonButtons.forEach(button => {
+  button.addEventListener('click', function() {
+    const season = this.dataset.season;
+    if (selectedSeasons.has(season)) {
+      selectedSeasons.delete(season);
+      this.classList.remove('selected');
+    } else {
+      selectedSeasons.add(season);
+      this.classList.add('selected');
+    }
+    updateRecommendations();
+  });
+ });
+
+ // Initial call to display a default message
+ updateRecommendations();
+ </script>
+
+ </body>
+ </html>
